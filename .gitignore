@@ -1,0 +1,8 @@
+stuff/
+bin/
+build/
+examples/Bin
+examples/Build
+extra/doc/doxygen_API_docs_output/html
+display.cppcheck
+
