@@ -13,7 +13,7 @@
     * [API documentation](#api-documentation)
     * [Fonts](#fonts)
   * [Software](#software)
-    * [User options](#user-options
+    * [User options](#user-options)
     * [File-system](#file-system)
     * [Tool chain](#tool-chain)
   * [Hardware](#hardware)
@@ -31,7 +31,7 @@
 1. Dynamic install-able Raspberry Pi C++ library.
 2. 15 fonts included, new Fonts can easily be added by user
 3. Common graphics + print class included
-4. Dependency: [bcm2835 Library](http://www.airspayce.com/mikem/bcm2835/), Provides SPI,I2C, system timer and GPIO control.
+4. Dependency: [bcm2835 Library](http://www.airspayce.com/mikem/bcm2835/), Provides SPI , system timer and GPIO control.
 5. HW & SW SPI
 6. Inverse colour, rotate, sleep modes supported.
 7. 24 bit colour , 16 bit color & bi-color Bitmaps supported.
@@ -88,7 +88,7 @@ The code is commented for Doxygen API generation software. Run doxygen on the fi
 
 ### Fonts
 
-The font system is same as Display_LIB for the graphic display [is documented here at link.](https://github.com/gavinlyonsrepo/Display_Lib_RPI/extra/doc/fonts/README.md)
+The font system is same as Display_LIB for the graphic display [is documented here at link.](https://github.com/gavinlyonsrepo/Display_Lib_RPI/blob/main/extra/doc/fonts/README.md)
 
 ## Software
 
@@ -145,6 +145,7 @@ In example folder:
 The Main.cpp file contains tests showing library functions.
 A bitmap data file contains data for bi-color bitmaps and icons tests.
 The color bitmaps used in testing are in bitmap folder.
+Examples are set up for 90 degree rotation for a 240X320 display.
 
 | # | example file name  | Desc|
 | ------ | ------ |  ------ |
