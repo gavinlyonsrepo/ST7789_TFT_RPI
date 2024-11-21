@@ -18,8 +18,10 @@
     * [Tool chain](#tool-chain)
   * [Hardware](#hardware)
   * [Output](#output)
-  * [Notes and issues](#notes-and-issues)
-
+  * [Notes](#notes)
+    * [Multiple SPI devices](#multiple-spi-devices)
+    * [Raspberry Pi five](#raspberry-pi-five)
+    * [Display offsets](#display-offsets)
 
 ## Overview
 
@@ -29,19 +31,20 @@
 
 0. A C++ Library to connect 16-bit color ST7789 TFT LCD displays to Raspberry Pi single board computers.
 1. Dynamic install-able Raspberry Pi C++ library.
-2. 15 fonts included, new Fonts can easily be added by user
-3. Common graphics + print class included
+2. 15 fonts included, new Fonts can be added by user
+3. Graphics + print class included
 4. Dependency: [bcm2835 Library](http://www.airspayce.com/mikem/bcm2835/), Provides SPI , system timer and GPIO control.
-5. HW & SW SPI
+5. Hardware & Software SPI
 6. Inverse colour, rotate, sleep modes supported.
 7. 24 bit colour , 16 bit color & bi-color Bitmaps supported.
+8. Note : This is a truncated port of combined display library : [Display_Lib_RPI.](https://github.com/gavinlyonsrepo/Display_Lib_RPI) created for a user request.
 
 ## Installation
 
 1. Install the dependency bcm2835 Library if not installed
 	* Install the C libraries of bcm2835, [Installation instructions here](http://www.airspayce.com/mikem/bcm2835/)
 
-2. Download the Display_Lib_RPI library
+2. Download the ST7789_TFT_RPI library
 	* Open a Terminal in a folder where you want to download,build & test library
 	* Run following command to download latest release from github.
 
@@ -59,12 +62,11 @@ make
 sudo make install
 ```
 
-
 ## Test
 
 1. Next step is to test your display and installed library with the included test example files, connect display.
 2. Enter the example folder.
-3. Edit the makefile in that folder to select the desired display and example file path.
+3. Edit the makefile in that folder to select the example file path.
 		Simply edit "SRC" variable at top of the makefile. In the "User SRC directory Option Section" at top of file.
 		Pick an example "SRC" directory path and One ONLY.
 5. Run 'make' commmand. This builds the examples file using the just installed library,
@@ -88,7 +90,7 @@ The code is commented for Doxygen API generation software. Run doxygen on the fi
 
 ### Fonts
 
-The font system is same as Display_LIB for the graphic display [is documented here at link.](https://github.com/gavinlyonsrepo/Display_Lib_RPI/blob/main/extra/doc/fonts/README.md)
+The font system is same as used in Display_Lib_RPI 'mother' library , [is documented here at link.](https://github.com/gavinlyonsrepo/Display_Lib_RPI/blob/main/extra/doc/fonts/README.md)
 
 ## Software
 
@@ -154,20 +156,27 @@ Examples are set up for 90 degree rotation for a 240X320 display.
 | 3 | Bitmap_Tests | bitmap |
 | 4 | Frame_rate_test_bmp | Frame rate per second (FPS) bitmaps |
 
-
 There are 2 makefiles.
 
 1. Root directory, builds and installs library at a system level.
 2. Example directory  builds a chosen example file using installed library to an executable.
-which can then be run. 
+which can then be run.
 
 Library naming :
 
-1. library name = librpist7789gl
+1. Library name = librpist7789gl
 2. Linker flags for complier = -lrpist7789gl (also needs -lbcm2835 for bcm2835 library)
 3. Library File suffix  = RVL
 4. Project name = ST7789_TFT_RPI
 
+### Tool chain
+
+* Development Tool chain.
+	1. Raspberry PI 3 model b ( will not work on RPi 5 see notes)
+	2. C++, g++ (Debian 12.2.0)
+	3. Raspbian , Debian 12 bookworm OS, 64 bit.
+	4. kernel : aarch64 Linux 6.1.0-rpi7-rpi-v8
+	5. bcm2835 Library v1.75 dependency.
 
 ## Hardware
 
@@ -193,24 +202,11 @@ Connections as setup in main.cpp test file.
 | 7 | VCC | VCC | VCC  |
 | 8 | GND | GND | GND |
 
-
 1. Connect LED backlight pin 1 thru a resistor to VCC.
 2. This is a 3.3V logic device do NOT connect the I/O logic lines to 5V logic device.
 3. Pick any GPIO you want for SW SPI,  for HW SPI: reset and DC lines are flexible.
 4. User can select  SPI_CE0  or SPI_CE1 for HW SPI
 5. Backlight control is left to user.
-
-
-
-### Tool chain
-
-* Development Tool chain.
-	1. Raspberry PI 3 model b ( will not work on RPi 5 see notes)
-	2. C++, g++ (Debian 12.2.0)
-	3. Raspbian , Debian 12 bookworm OS, 64 bit.
-	4. kernel : aarch64 Linux 6.1.0-rpi7-rpi-v8
-	5. bcm2835 Library v1.75 dependency.
-
 
 ## Output
 
@@ -220,9 +216,23 @@ Connections as setup in main.cpp test file.
 
 ### Multiple SPI devices
 
-1. When using hardware SPI for multiple devices on the bus.
+When using hardware SPI for multiple devices on the bus.
 If the devices require different SPI settings (speed of bus, bit order , chip enable pins , SPI data mode).
 The user must call function **TFTSPIHWSettings()** before each block of SPI transactions for display in order to refresh the SPI hardware settings for that device. See github [issue #1](https://github.com/gavinlyonsrepo/Display_Lib_RPI/issues/1).
 
-2. Will not work on Raspberry 5 at present as the bcm2835 Library dependency is not updated
-to work yet on Rpi5. Hopefully it will be updated soon , If it is not going to be updated, another path forward will be found.
+### Raspberry Pi five
+
+Will not work on Raspberry 5 at present as the bcm2835 Library dependency is not updated
+to work yet on Rpi5.
+
+### Display offsets
+
+The display initialisation requires an offset calculation which differs for different size and resolution displays.
+This is in the code(Function AdjustWidthHeight()) but the many different size displays are not available for testing or dealt with.
+If using a display other than 240x320(the default and size of ST7789 VRAM) and if user finds they cannot address all screen
+or their data is offset. Try Setting the pixel width and height of your screen to 240X320 and do not write as 
+much as possible to the part of the Video RAM you cannot see.
+For example  if you have a 240X280 display in 0 degree rotation
+1. Set pixel Width = 240 and pixel height = 320
+2. Do not write to the missing 40 pixels in the Y-axis, you still can but it is inefficient.
+
