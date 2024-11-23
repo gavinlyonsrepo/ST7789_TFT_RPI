@@ -160,7 +160,7 @@ Examples are set up for 90 degree rotation for a 240X320 display.
 | ------ | ------ |  ------ |
 | 1 | Hello_world_HWSPI_0 | Basic use case hardware spi 0 |
 | 2 | Hello_world_HWSPI_1 | Basic use case hardware spii 1 (aux)|
-| 3 | Hello_world_SWSPI_0 | Basic use case software spi|
+| 3 | Hello_world_SWSPI | Basic use case software spi|
 | 4 | Text_Graphic_Functions | Tests text,graphics & function testing  |
 | 5 | Bitmap_Tests | bitmaps display |
 | 6 | Frame_rate_test_bmp | Frame rate per second (FPS) bitmaps |
@@ -248,7 +248,7 @@ For example  if you have a 240X280 display in 0 degree rotation
 
 ### Hardware spi aux
 
-Support for SPI 1 port have included however the measured frame rate on this port 
-is ~50% less than SPI 0 for reasons unknown (unrelated to library code).
+Support for SPI 1 port is included, however the measured frame rate on this port 
+is ~50% less than SPI 0 for reasons unknown at time of writing (unrelated to library code).
 See Frame rate test results file in 'docs'.
 
