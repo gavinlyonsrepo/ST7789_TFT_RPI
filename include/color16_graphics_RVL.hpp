@@ -124,8 +124,7 @@ protected:
 	void writeData(uint8_t);
 	void spiWrite(uint8_t);
 	void spiWriteSoftware(uint8_t spidata);
-	//uint8_t spiRead(uint8_t commandByte);
-	//uint8_t spiReadSoftware(uint8_t commandByte);
+
 	void spiWriteDataBuffer(uint8_t* spidata, uint32_t len);
 
 	bool _hardwareSPI=true; /**< True for Hardware SPI on , false fpr Software SPI on*/
@@ -147,9 +146,9 @@ protected:
 	int8_t _DisplayRVL_SCLK;  /**< GPIO for Clock line,  Software SPI only */
 	int8_t _DisplayRVL_SDATA; /**< GPIO for MOSI line,  Software SPI only */
 	int8_t _DisplayRVL_MISO;  /**< GPIO for  MISO line,  Software SPI only */
-	
-	uint16_t _HighFreqDelay = 0; /**< uS GPIO Communications delay, SW SPI ONLY */
 
+	uint16_t _HighFreqDelay = 0; /**< uS GPIO Communications delay, SW SPI ONLY */
+	uint8_t _TFT_SPI_Handle_Chosen = 0; /**< Which SPi interface handle to use 0 or 1(aux) */
 private:
 
 };

@@ -1,0 +1,32 @@
+GPIO numbers used in test files
+
+
+Hardware SPI SPI-0
+===========================
+Reset pin 22 --   GPIO 25  (pick any GPIO you want )
+DC pin 16 --      GPIO 24  (pick any GPIO you want )
+MOSI pin 19 --    GPIO 10
+MISO pin 21 ---   GPIO 09 (not needed for display)
+SCLK pin 23 --    GPIO 11
+SPI_CE0 pin 24 -- GPIO 08
+or 
+SPI_CE1 pin 26 -- GPIO 07
+
+Hardware  SPI SPI-1 (aux)
+============================
+Reset pin 22 --   GPIO 25  (pick any GPIO you want )
+DC pin 16 --      GPIO 24  (pick any GPIO you want )
+MOSI pin 38 --    GPIO 20
+MISO pin 35 --    GPIO 19 (not needed for display)
+SCLK pin 40 --    GPIO 21
+SPI_CE2 pin 36 -- GPIO 16
+
+Software SPI (pick any GPIO you want)
+==========================
+Reset pin 22 --   GPIO 25
+DC pin 16 --      GPIO 24
+SDIN pin 35 --    GPIO 19
+SCLK pin 37 --    GPIO 26
+CS pin 32    --   GPIO 12
+
+

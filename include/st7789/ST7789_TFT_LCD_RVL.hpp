@@ -35,17 +35,20 @@ public:
 		TFT_Degrees_270    /**< Rotation 270 degrees*/
 	};
 
-	TFT_rotate_e TFT_rotate = TFT_Degrees_0; /**< Enum to hold rotation */
+	TFT_rotate_e _TFT_rotate = TFT_Degrees_0; /**< Enum to hold rotation */
 
 	// Functions
 	// From graphics virtual
 	virtual void setAddrWindow(uint16_t, uint16_t, uint16_t, uint16_t) override;
 	//Setup related
 	void TFTSetupGPIO(int8_t, int8_t, int8_t, int8_t, int8_t); //SW SPI
-	void TFTSetupGPIO(int8_t, int8_t); // HW SPI
+	void TFTSetupGPIO(int8_t, int8_t); // HW SPI 
+
 	void TFTInitScreenSize(uint16_t xOffset, uint16_t yOffset, uint16_t w, uint16_t h);
+
 	void TFTInitSPI(uint16_t CommDelay); // SW SPI
-	rvlDisplay_Return_Codes_e TFTInitSPI(uint32_t hertz = 0, uint8_t SPICE_Pin = 0 ); // HW SPI
+	rvlDisplay_Return_Codes_e TFTInitSPI(uint32_t hertz, uint8_t SPICE_Pin); // HW SPI 0
+	rvlDisplay_Return_Codes_e TFTInitSPI(uint32_t hertz); // HW SPI 1 (aux)
 
 	// SPI related
 	uint16_t HighFreqDelayGet(void);
@@ -79,8 +82,9 @@ private:
 	uint16_t _heightStartTFT = 0; /**< never change after first init */
 
 	// SPI
-	uint32_t _hertz = 8000000; /**< Spi freq in Hertz , MAX 125 Mhz MIN 30Khz */
+	uint32_t _hertz = 0; /**< Spi freq in Hertz , MAX 125 Mhz MIN 30Khz */
 	uint8_t _SPICEX_pin = 0;    /**< value = X , which SPI_CE pin to use */
+	
 
 }; //end of ST7789_TFT  class
 

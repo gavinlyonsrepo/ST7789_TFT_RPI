@@ -22,6 +22,7 @@
     * [Multiple SPI devices](#multiple-spi-devices)
     * [Raspberry Pi five](#raspberry-pi-five)
     * [Display offsets](#display-offsets)
+    * [Hardware spi aux](hardware-spi-aux)
 
 ## Overview
 
@@ -34,7 +35,7 @@
 2. 15 fonts included, new Fonts can be added by user
 3. Graphics + print class included
 4. Dependency: [bcm2835 Library](http://www.airspayce.com/mikem/bcm2835/), Provides SPI , system timer and GPIO control.
-5. Hardware & Software SPI
+5. Hardware (SPI0 and SPI1-aux) & Software SPI
 6. Inverse colour, rotate, sleep modes supported.
 7. 24 bit colour , 16 bit color & bi-color Bitmaps supported.
 8. Note : This is a truncated port of combined display library : [Display_Lib_RPI.](https://github.com/gavinlyonsrepo/Display_Lib_RPI) created for a user request.
@@ -49,7 +50,7 @@
 	* Run following command to download latest release from github.
 
 ```sh
-curl -sL https://github.com/gavinlyonsrepo/ST7789_TFT_RPI/archive/1.0.1.tar.gz | tar xz
+curl -sL https://github.com/gavinlyonsrepo/ST7789_TFT_RPI/archive/1.0.2.tar.gz | tar xz
 ```
 
 3. Run 'make' and 'sudo make install' to run the makefile to build and then install library. 
@@ -57,7 +58,7 @@ curl -sL https://github.com/gavinlyonsrepo/ST7789_TFT_RPI/archive/1.0.1.tar.gz |
 	* You can run 'make help' here to see other make options(uninstall etc).
 
 ```sh
-cd ST7789_TFT_RPI-1.0.1
+cd ST7789_TFT_RPI-1.0.2
 make
 sudo make install
 ```
@@ -119,7 +120,11 @@ The function InitScreenSize sets them.
 
 *USER OPTION 3  SPI SPEED , SPI_CE_PIN*
 
-InitSPI function is overloaded(2 off, one for HW SPI the other for SW SPI).
+InitSPI function is overloaded(3 off)
+
+1. Hardware SPI 0 
+2. Hardware SPI 1(aux)
+3. Software SPI
 
 Param SPI_Speed (HW SPI Only)
 
@@ -129,7 +134,9 @@ Although it is possible to select high speeds for the SPI interface, up to 125MH
 Don't expect any speed faster than 32MHz to work reliably.
 If you set to 0 .Speed is set to bcm2835 constant BCM2835_SPI_CLOCK_DIVIDER_32.
 
-Param SPI_CE_PIN (HW SPI Only)
+Param SPI_CE_PIN (HW SPI 0 Only)
+
+Note if using Hardware SPI 1(aux) the SPI_CE_PIN is fixed, no choice.
 
 Which Chip enable pin to use two choices.
 	* SPICE0 = 0
@@ -149,12 +156,15 @@ A bitmap data file contains data for bi-color bitmaps and icons tests.
 The color bitmaps used in testing are in bitmap folder.
 Examples are set up for 90 degree rotation for a 240X320 display.
 
-| # | example file name  | Desc|
+| # | example file name  | Description|
 | ------ | ------ |  ------ |
-| 1 | Hello_world| Basic use case |
-| 2 | Text_Graphic_Functions | Tests text,graphics & function testing  |
-| 3 | Bitmap_Tests | bitmap |
-| 4 | Frame_rate_test_bmp | Frame rate per second (FPS) bitmaps |
+| 1 | Hello_world_HWSPI_0 | Basic use case hardware spi 0 |
+| 2 | Hello_world_HWSPI_1 | Basic use case hardware spii 1 (aux)|
+| 3 | Hello_world_SWSPI_0 | Basic use case software spi|
+| 4 | Text_Graphic_Functions | Tests text,graphics & function testing  |
+| 5 | Bitmap_Tests | bitmaps display |
+| 6 | Frame_rate_test_bmp | Frame rate per second (FPS) bitmaps |
+| 7 | Frame_rate_test_two | Frame rate per second (FPS) text and graphics |
 
 There are 2 makefiles.
 
@@ -183,7 +193,7 @@ Library naming :
 Tested and developed on:
 
 * Size 1.69" IPS color TFT LCD
-* Resolution: 240 (H) RGB x280 (V)
+* Resolution: 240 (H) RGB x 280 (V) 
 * Control chip: st7789v2
 * Display area 27.972 (H) x 32.634 (V)
 * Panel size 30.07 (H) x37.43 (V) x1.56 (d)
@@ -191,21 +201,21 @@ Tested and developed on:
 
 Connections as setup in main.cpp test file.
 
-| TFT PinNum | Pindesc | RPI HW SPI | RPI SW SPI |
-| --- | --- | --- | --- |
-| 1 | LED | VCC |  VCC |
-| 2 | SS/CS | SPI_CE0 | GPIO8 |
-| 3 | DC | GPIO24 | GPIO24  |
-| 4 | RESET | GPI025  | GPIO25 |
-| 5 | SDA | SPI_MOSI | GPIO6 |
-| 6 | SCLK | SPI_CLK | GPIO5 |
-| 7 | VCC | VCC | VCC  |
-| 8 | GND | GND | GND |
+| TFT PinNum | Pindesc | RPI HW SPI 0 | RPI SW SPI | RPI HW SPI 1 Aux |
+| --- | --- | --- | --- |  --- |
+| 1 | LED | VCC |  VCC |  VCC |
+| 2 | SS/CS | GPIO8 SPI_CE0 | GPI12 | GPIO16  SPI_AUX_CE2 |
+| 3 | DC | GPIO24 | GPIO24  | GPIO24|
+| 4 | RESET | GPI025  | GPIO25 | GPIO25 |
+| 5 | SDA | GPIO10 SPI_MOSI | GPIO19 | GPIO20 SPI_AUX_MOSI |
+| 6 | SCLK | GPIO11 SPI_CLK | GPIO26 | GPIO21 SPI_AUX_CLK|
+| 7 | VCC | VCC | VCC  |  VCC |
+| 8 | GND | GND | GND | GND |
 
 1. Connect LED backlight pin 1 thru a resistor to VCC.
 2. This is a 3.3V logic device do NOT connect the I/O logic lines to 5V logic device.
-3. Pick any GPIO you want for SW SPI,  for HW SPI: reset and DC lines are flexible.
-4. User can select  SPI_CE0  or SPI_CE1 for HW SPI
+3. Pick any GPIO you want for SW SPI, for HW SPI: reset and DC lines are flexible.
+4. User can select  SPI_CE0  or SPI_CE1 for HW SPI 0
 5. Backlight control is left to user.
 
 ## Output
@@ -235,4 +245,10 @@ much as possible to the part of the Video RAM you cannot see.
 For example  if you have a 240X280 display in 0 degree rotation
 1. Set pixel Width = 240 and pixel height = 320
 2. Do not write to the missing 40 pixels in the Y-axis, you still can but it is inefficient.
+
+### Hardware spi aux
+
+Support for SPI 1 port have included however the measured frame rate on this port 
+is ~50% less than SPI 0 for reasons unknown (unrelated to library code).
+See Frame rate test results file in 'docs'.
 

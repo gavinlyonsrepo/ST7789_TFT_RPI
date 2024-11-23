@@ -744,7 +744,13 @@ void color16_graphics::spiWriteDataBuffer(uint8_t* spidata, uint32_t len) {
 		for(uint32_t i=0; i<len; i++) {spiWriteSoftware(spidata[i]);}
 		DisplayRVL_CS_SetHigh;
 	} else {
-		bcm2835_spi_writenb((char*)spidata,len);
+		if (_TFT_SPI_Handle_Chosen == 0)
+		{
+			bcm2835_spi_writenb((char*)spidata,len);
+		} else if (_TFT_SPI_Handle_Chosen == 1)
+		{
+			bcm2835_aux_spi_writenb((char*)spidata,len);
+		}
 	}
 }
 
@@ -757,7 +763,13 @@ void color16_graphics::spiWrite(uint8_t spidata) {
 	{
 		spiWriteSoftware(spidata);
 	} else {
-		bcm2835_spi_transfer(spidata);
+		if (_TFT_SPI_Handle_Chosen == 0)
+		{
+			bcm2835_spi_transfer(spidata);
+		} else if (_TFT_SPI_Handle_Chosen == 1)
+		{
+			bcm2835_aux_spi_transfer(spidata);
+		}
 	}
 }
 
@@ -781,33 +793,6 @@ void color16_graphics::spiWriteSoftware(uint8_t spidata) {
 	}
 }
 
-
-//uint8_t color16_graphics::spiRead(uint8_t commandByte) {
-	//if (_hardwareSPI == false)
-	//{
-		//return spiReadSoftware(commandByte);
-	//} else {
-		//return bcm2835_spi_transfer(commandByte);
-	//}
-//}
-
-//uint8_t color16_graphics::spiReadSoftware(uint8_t commandByte) {
-
-	//wrietCommand(commandbyte);
-	//DisplayRVL_MISO_SetDigitalInput;
-	//uint8_t value = 0;
-	//uint8_t i = 0;
-
-	//for(i = 0; i < 8; ++i) 
-	//{
-		//value |= DisplayRVL_MISO_Read << i;
-		//DisplayRVL_SCLK_SetHigh;
-		//delayMicroSecRVL(_HighFreqDelay);
-		//DisplayRVL_SCLK_SetLow;
-		//delayMicroSecRVL(_HighFreqDelay);
-	//}
-	//return value;
-//}
 
 /*!
 	@brief Set the Cursor Position on screen
@@ -944,7 +929,7 @@ rvlDisplay_Return_Codes_e  color16_graphics::writeCharString(int16_t x, int16_t 
 		if(DrawCharReturnCode  != rvlDisplay_Success) return DrawCharReturnCode;
 		count++;
 		MaxLength++;
-		if (MaxLength >= 150) break; // 2nd way out of loop, safety check
+		if (MaxLength >= 200) break; // 2nd way out of loop, safety check
 	}
 	return rvlDisplay_Success;
 }

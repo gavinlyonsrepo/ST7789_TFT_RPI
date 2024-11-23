@@ -22,7 +22,7 @@
 #define TEST_DELAY1 1000
 #define TEST_DELAY2 2000
 #define TEST_DELAY5 5000
-#define CLOCK_DISPLAY_TIME 350
+#define CLOCK_DISPLAY_TIME 300
 
 // Display size in pixels
 #define myTFTWidth 240
@@ -355,7 +355,6 @@ void Test305(void)
 			free(bmpBuffer);
 			return;
 		}
-		delayMilliSecRVL(TEST_DELAY5);
 		delayMilliSecRVL(TEST_DELAY5);
 	}
 	free(bmpBuffer);  // Free Up Buffer

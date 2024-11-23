@@ -1,7 +1,7 @@
 /*!
 	@file common_data_RVL.hpp
 	@author Gavin Lyons
-	@brief file to hold common data used by all Displays
+	@brief file to hold common data
 	Project Name: ST7789_TFT_RPI
 */
 
@@ -35,10 +35,8 @@ enum rvlDisplay_Return_Codes_e : uint8_t
 	rvlDisplay_BufferNullptr = 15,         /**< The Buffer data array is an invalid pointer object*/
 	rvlDisplay_SPIbeginFail = 16,          /**< bcm2835_spi_begin() has failed, running as root?*/
 	rvlDisplay_SPICEXPin = 17,             /**< SPICE_PIN value incorrect must be 0 or 1 */
-	rvlDisplay_I2CbeginFail = 18,          /**< bcm2835_i2c_begin() has failed, running as root?*/
 	rvlDisplay_ShapeScreenBounds = 19,     /**< Shape is outside screen bounds, check x and y */
-	rvlDisplay_MallocError = 20,           /**< malloc could not assign memory*/
-	rvlDisplay_WrongInputPCBType = 21      /**< Wrong input PCB type chosen */
+	rvlDisplay_MallocError = 20           /**< malloc could not assign memory*/
 };
 
 

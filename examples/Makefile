@@ -11,10 +11,13 @@
 # Comment out the others.
 
 # =============== ST7789 TFT LCD SPI =============
-#SRC=st7789/Hello_world
+SRC=st7789/Hello_world_HWSPI_0
+#SRC=st7789/Hello_world_HWSPI_1
+#SRC=st7789/Hello_world_SWSPI
 #SRC=st7789/Text_Graphics_Functions
 #SRC=st7789/Bitmap_Tests
-SRC=st7789/Frame_rate_test_bmp
+#SRC=st7789/Frame_rate_test_bmp
+#SRC=st7789/Frame_rate_test_two
 #=================================================
 
 # ************************************************

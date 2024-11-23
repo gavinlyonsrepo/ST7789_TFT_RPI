@@ -71,36 +71,42 @@ ST7789_TFT :: ST7789_TFT(){}
 
 /*!
 	@brief  Init Hardware SPI settings
-	@details MSBFIRST, mode 0 , SPI Speed , SPICEX pin
+	@details MSBFIRST (default), mode 0 (default) , SPI Speed , SPICEX pin(SPI0 only)
 	@note If multiple devices on SPI bus with different settings,
 	can be used to refresh ST7789 settings
 */
 void ST7789_TFT::TFTSPIHWSettings(void)
 {
-	bcm2835_spi_setBitOrder(BCM2835_SPI_BIT_ORDER_MSBFIRST);
-	bcm2835_spi_setDataMode(BCM2835_SPI_MODE0);
 
-	if (_hertz > 0)
-		bcm2835_spi_setClockDivider(bcm2835_aux_spi_CalcClockDivider(_hertz));
-	else //SPI_CLOCK_DIVIDER_32 = 7.8125MHz on Rpi2, 12.5MHz on RPI3
-		bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_32);
 
-	if (_SPICEX_pin == 0)
+	if (_TFT_SPI_Handle_Chosen == 0) // Spi 0 
 	{
-		bcm2835_spi_chipSelect(BCM2835_SPI_CS0);
-		bcm2835_spi_setChipSelectPolarity(BCM2835_SPI_CS0, LOW);
-	}else if (_SPICEX_pin == 1)
+		bcm2835_spi_setBitOrder(BCM2835_SPI_BIT_ORDER_MSBFIRST); //default
+		bcm2835_spi_setDataMode(BCM2835_SPI_MODE0); //default
+		if (_hertz > 0)
+			bcm2835_spi_setClockDivider(bcm2835_aux_spi_CalcClockDivider(_hertz));
+		else //SPI_CLOCK_DIVIDER_32 = 7.8125MHz on Rpi2, 12.5MHz on RPI3
+			bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_32);
+
+		if (_SPICEX_pin == 0)
+		{
+			bcm2835_spi_chipSelect(BCM2835_SPI_CS0);
+			bcm2835_spi_setChipSelectPolarity(BCM2835_SPI_CS0, LOW);
+		}else if (_SPICEX_pin == 1)
+		{
+			bcm2835_spi_chipSelect(BCM2835_SPI_CS1);
+			bcm2835_spi_setChipSelectPolarity(BCM2835_SPI_CS1, LOW);
+		}
+	} else if (_TFT_SPI_Handle_Chosen == 1) // SPi 1 (aux) CE pin is fixed no choice
 	{
-		bcm2835_spi_chipSelect(BCM2835_SPI_CS1);
-		bcm2835_spi_setChipSelectPolarity(BCM2835_SPI_CS1, LOW);
+		bcm2835_aux_spi_setClockDivider(bcm2835_aux_spi_CalcClockDivider(_hertz));
 	}
 }
 
 /*!
 	@brief Call when powering down TFT
 	@note Turns off Display Sets GPIO low and turns off SPI
-	End SPI operations. SPI0 pins P1-19 (MOSI), P1-21 (MISO), P1-23 (CLK),
-	P1-24 (CE0) and P1-26 (CE1) are returned to their default INPUT behavior.
+	End SPI operations. SPI pins are returned to their default INPUT behaviour.
 */
 void ST7789_TFT ::TFTPowerDown(void)
 {
@@ -108,16 +114,22 @@ void ST7789_TFT ::TFTPowerDown(void)
 	DisplayRVL_DC_SetLow;
 	DisplayRVL_RST_SetLow;
 
-if (_hardwareSPI == false)
-{
-	DisplayRVL_SCLK_SetLow;
-	DisplayRVL_SDATA_SetLow;
-	DisplayRVL_CS_SetLow;
-}else{
-	bcm2835_spi_end();
+	if (_hardwareSPI == false)
+	{
+		DisplayRVL_SCLK_SetLow;
+		DisplayRVL_SDATA_SetLow;
+		DisplayRVL_CS_SetLow;
+	}else{
+		if (_TFT_SPI_Handle_Chosen == 0)
+		{
+			bcm2835_spi_end();
+		} else if (_TFT_SPI_Handle_Chosen == 1)
+		{
+			bcm2835_aux_spi_end();
+		}
 	}
-}
 
+}
 /*!
 	@brief: Method for Hardware Reset pin control
 */
@@ -166,8 +178,8 @@ void ST7789_TFT ::TFTSetupGPIO(int8_t rst, int8_t dc, int8_t cs, int8_t sclk, in
 
 
 /*!
-	@brief init routine for ST7789B controller
-	@return Error if bcm2835_spi_begin has failed
+	@brief init routine for ST7789 controller
+	@return rvlDisplay_SPIbeginFail error if bcm2835_spi_begin or bcm2835_aux_spi_begin has failed
 */
 rvlDisplay_Return_Codes_e ST7789_TFT::TFTST7789Initialize() {
 	TFTResetPIN();
@@ -182,10 +194,20 @@ if (_hardwareSPI == false)
 	DisplayRVL_SCLK_SetLow;
 	DisplayRVL_SDATA_SetLow;
 }else{
-	if (!bcm2835_spi_begin())
+	if (_TFT_SPI_Handle_Chosen == 0)
 	{
-		std::cout << "Error:TFTST7789Initialize1:  bcm2835_spi_begin :Cannot start spi, Running as root?" << std::endl;
-		return rvlDisplay_SPIbeginFail;
+		if (!bcm2835_spi_begin())
+		{
+			std::cout << "Error:TFTST7789Initialize:  bcm2835_spi_begin :Cannot start spi0, Running as root?" << std::endl;
+			return rvlDisplay_SPIbeginFail;
+		}
+	}else if (_TFT_SPI_Handle_Chosen == 1)
+	{
+		if (!bcm2835_aux_spi_begin())
+		{
+			std::cout << "Error:TFTST7789Initialize:  bcm2835_spi__auxbegin :Cannot start spi1(aux), Running as root?" << std::endl;
+			return rvlDisplay_SPIbeginFail;
+		}
 	}
 	TFTSPIHWSettings();
 }
@@ -294,7 +316,7 @@ void ST7789_TFT ::TFTsleepDisplay(bool sleepMode){
 
 /*!
 	@brief: change rotation of display.
-	@param mode TFT_rotate_e enum
+	@param mode _TFT_rotate_e enum
 	0 = Normal
 	1=  90 rotate
 	2 = 180 rotate
@@ -333,7 +355,7 @@ void ST7789_TFT ::TFTsetRotation(TFT_rotate_e mode) {
 			_height = _widthStartTFT;
 			break;
 	}
-	TFT_rotate = mode;
+	_TFT_rotate = mode;
 	writeCommand(ST7789_MADCTL);
 	writeData(madctl);
 }
@@ -360,14 +382,14 @@ void ST7789_TFT  :: TFTInitScreenSize(uint16_t colOffset, uint16_t rowOffset, ui
 }
 
 /*!
-	@brief intialise  SPI, Hardware SPI
+	@brief intialise  SPI, Hardware SPI 0
 	@param hertz  SPI Clock frequency in Hz, HW SPI only MAX 125 Mhz , MIN 30Khz(RPI3). typical/tested 8000000
 	@param SPICE_Pin which SPI CE/CS pin to use 0 = SPICE0 GPIO08 RPI3, 1 = SPICE1 GPIO07 RPI3
 	@return
 		-# rvlDisplay_Success = success
 		-# rvlDisplay_SPICEXPin SPI pin  incorrect value
 		-# rvlDisplay_SPIbeginFail bcm2835_spi_begin has failed (upstream)
-	@note overloaded 2 off, 1 for HW SPI , 1 for SW SPI 
+	@note overloaded 3 off, 1 for HW SPI 0, HW SPI 1 and  SW SPI 
 */
 rvlDisplay_Return_Codes_e ST7789_TFT::TFTInitSPI(uint32_t hertz, uint8_t SPICE_Pin)
 {
@@ -376,10 +398,26 @@ rvlDisplay_Return_Codes_e ST7789_TFT::TFTInitSPI(uint32_t hertz, uint8_t SPICE_P
 		std::cout << "Error:TFTInitSPI 2: SPICE_PIN value incorrect :" << SPICE_Pin <<std::endl;
 		return  rvlDisplay_SPICEXPin;
 	}
-
+	
+	_TFT_SPI_Handle_Chosen = 0;
 	_SPICEX_pin = SPICE_Pin;
 	_hertz = hertz;
 
+	return TFTST7789Initialize();
+}
+
+/*!
+	@brief intialise  SPI, Hardware SPI 1 Aux
+	@param hertz  SPI Clock frequency in Hz, HW SPI only MAX 125 Mhz , MIN 30Khz(RPI3). typical/tested 8000000
+	@return
+		-# rvlDisplay_Success = success
+		-# rvlDisplay_SPIbeginFail bcm2835_spi_begin has failed (upstream)
+	@note overloaded 3 off, 1 for HW SPI 0, HW SPI 1 and  SW SPI 
+*/
+rvlDisplay_Return_Codes_e ST7789_TFT::TFTInitSPI(uint32_t hertz)
+{
+	_hertz = hertz;
+	_TFT_SPI_Handle_Chosen = 1;
 	return TFTST7789Initialize();
 }
 
@@ -392,7 +430,7 @@ void ST7789_TFT::TFTNormalMode(void){writeCommand(ST7789_NORON);}
 /*!
 	@brief intialise PCBtype and SPI, Software SPI
 	@param CommDelay uS GPIO delay used in software SPI
-	@note overloaded 2 off, 1 for HW SPI , 1 for SW SPI 
+	@note overloaded 3 off, 1 for HW SPI 0, HW SPI 1 and  SW SPI 
 */
 void ST7789_TFT::TFTInitSPI(uint16_t CommDelay)
 {

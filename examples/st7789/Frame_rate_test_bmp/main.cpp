@@ -4,8 +4,11 @@
 	@note See USER OPTIONS 1-3 in SETUP function
 	@details This test is setup for a 128by128 bitmaps 
 		3 files 128by128 pixels are loaded and displayed as many times as possible in 
-		10 seconds to calculate FPS. 
-		814 frames, 10 sec, 81.3904 fps  at 8Mhz SPI Baud rate, HW SPI
+		10 seconds to calculate FPS.
+		Results:
+		814 frames, 10 sec, 81.3904 fps  at 8Mhz SPI Baud rate, HW SPI 0
+		349 frames, 10 sec, 34.8921 fps  at 8Mhz SPI Baud rate, HW SPI 1 (aux)
+		32 frames, 10 sec, 3.17005 fps  at Software SPI 
 	@test 
 		-# Test 601 Frame rate per second (FPS) test. 24bit bitmaps.
 */
@@ -20,10 +23,11 @@
 #define TEST_DELAY1 1000
 #define TEST_DELAY2 2000
 #define TEST_DELAY5 5000
-uint8_t numberOfFiles = 3;
-//size in pixels of bitmap 
-#define myBMPWidth 128
+
+// Test bitmaps related
+#define myBMPWidth 128 //size in pixels of bitmap 
 #define myBMPHeight 128
+uint8_t numberOfFiles = 3;
 
 // Section :: Globals 
 ST7789_TFT myTFT;
@@ -90,6 +94,7 @@ int8_t Setup(void)
 	delayMilliSecRVL(50);
 	return 0;
 }
+
 
 /*!
  *@brief Frames per second test , 24 color bitmap test, 
