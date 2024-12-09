@@ -7,10 +7,10 @@
 ## Table of contents
 
   * [Overview](#overview)
+  * [See Also](#see-also)
   * [Installation](#installation)
   * [Test](#test)
   * [Documentation](#documentation)
-    * [API documentation](#api-documentation)
     * [Fonts](#fonts)
   * [Software](#software)
     * [User options](#user-options)
@@ -38,7 +38,10 @@
 5. Hardware (SPI0 and SPI1-aux) & Software SPI
 6. Inverse colour, rotate, sleep modes supported.
 7. 24 bit colour , 16 bit color & bi-color Bitmaps supported.
-8. Note : This is a truncated port of combined display library : [Display_Lib_RPI.](https://github.com/gavinlyonsrepo/Display_Lib_RPI) created for a user request.
+
+## See Also
+
+This is a truncated port of my combined display library : [Display_Lib_RPI.](https://github.com/gavinlyonsrepo/Display_Lib_RPI) created for a user request.
 
 ## Installation
 
@@ -83,11 +86,6 @@ make run
 ```
 
 ## Documentation
-
-
-### API Documentation
-
-The code is commented for Doxygen API generation software. Run doxygen on the file 'doxygen_docs_generate_file' to generate API in the 'doxygen_API_docs_output' folder
 
 ### Fonts
 
