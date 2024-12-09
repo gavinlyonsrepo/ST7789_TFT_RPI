@@ -91,7 +91,7 @@ The code is commented for Doxygen API generation software. Run doxygen on the fi
 
 ### Fonts
 
-The font system is same as used in Display_Lib_RPI 'mother' library , [is documented here at link.](https://github.com/gavinlyonsrepo/Display_Lib_RPI/blob/main/extra/doc/fonts/README.md)
+The font system is same as used in Display_Lib_RPI Version 1.3.0, [Display_Lib_RPI V 1.3.0.](https://github.com/gavinlyonsrepo/Display_Lib_RPI/releases/tag/1.3.0)
 
 ## Software
 
