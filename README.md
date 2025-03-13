@@ -47,6 +47,14 @@ This is a truncated port of my combined display library : [Display_Lib_RPI.](htt
 
 1. Install the dependency bcm2835 Library if not installed
 	* Install the C libraries of bcm2835, [Installation instructions here](http://www.airspayce.com/mikem/bcm2835/)
+	* Assuming Latest version is 1.75(03-2025)) open a terminal  Run following command to download and install
+```sh
+curl -sL http://www.airspayce.com/mikem/bcm2835/bcm2835-1.75.tar.gz | tar xz 
+cd bcm2835-1.75
+./configure
+make
+sudo make check
+```
 
 2. Download the ST7789_TFT_RPI library
 	* Open a Terminal in a folder where you want to download,build & test library
@@ -89,7 +97,7 @@ make run
 
 ### Fonts
 
-The font system is same as used in Display_Lib_RPI Version 1.3.0, [Display_Lib_RPI V 1.3.0.](https://github.com/gavinlyonsrepo/Display_Lib_RPI/releases/tag/1.3.0)
+The font system readme for the graphic displays is in the 'doc' folder [at link.](extra/doc/fonts/README.md)
 
 ## Software
 
