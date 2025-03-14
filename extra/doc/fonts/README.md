@@ -23,7 +23,7 @@ All the Font data is in file font_data_RVL.cpp. These fonts are used by the grap
 | 14 | font_mint | 24x32  | 0x20 - 0x7A |  8740 |
 | 15 | font_sixteenSeg | 32x48 | 0x2D-0x3A , 0-10 : . / - only | 2692 |
 
-Font size in bytes = ((X * (Y/8)) * numberOfCharacters) + (4*ControlByte)
+Font size in bytes = ((X * (Y/8)) * numberOfCharacters) + (4 ControlBytes)
 
 | Font class Function | Notes |
 | ------ | ------ | 
@@ -42,22 +42,25 @@ Font size in bytes = ((X * (Y/8)) * numberOfCharacters) + (4*ControlByte)
 
 A new ASCII font must have following font structure.
 First 4 bytes are control bytes followed by vertically addressed font data.
+Also the fonts height(or y-size) must be divisible evenly by 8. 
 
 ```
 // An 4 by 8 character size font starting at 
-// ASCII offset 0x30 in ASCII table with 0x02 characters in font. 
+// ASCII offset 0x30 in ASCII table with 2 characters in font. 
 // 0 and 1 
-static const uint8_t FontBinaryExample[] =
+static const uint8_t FontBinaryExample[12] =
 {
-0x04, 0x08, 0x30, 0x02,   // x-size, y-size, offset, total characters
-(data),(data),(data),(data) // font data '0'
-(data),(data),(data),(data) // font data '1'
+0x04, 0x08, 0x30, 0x01,   // x-size, y-size, start offset, (last character-offset : 0x31-0x30)
+(data),(data),(data),(data) // font data '0' 0x30
+(data),(data),(data),(data) // font data '1' 0x31
 }
 ```
 
 ## Sources
 
 1. Some of the fonts packaged with library came from [URL](http://rinkydinkelectronics.com/)
-2. User must convert them from horizontal to vertical data,
-There is a monochrome font maker there at [URL](http://rinkydinkelectronics.com/t_make_font_file_mono.php),
-just upload the picture of font to it. 
+2. These fonts have horizontally addressed data.
+3. They must be converted to vertically addressed font data if user wants them for ST7789_TFT_RPI.
+4. There is a monochrome font maker there at [URL](http://rinkydinkelectronics.com/t_make_font_file_mono.php),
+5. Just upload the picture of font from URL links on step 1 to it. 
+6. The font you pick MUST have : Height(or y-size) must be divisible evenly by 8. (Width X Height)
