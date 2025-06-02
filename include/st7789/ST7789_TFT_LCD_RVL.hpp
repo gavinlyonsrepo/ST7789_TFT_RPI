@@ -72,7 +72,8 @@ private:
 	rvlDisplay_Return_Codes_e TFTST7789Initialize(void);
 	void cmd89(void);
 	void AdjustWidthHeight(void);
-	
+	void TFTSetupResetPin(int8_t rst);
+
 	// Screen
 	uint16_t _colstart = 0;          /**< Used to offset column in the event of defect at edge of screen */
 	uint16_t _rowstart = 0;          /**< Used to offset row in the event of defect at edge of screen */
@@ -84,7 +85,7 @@ private:
 	// SPI
 	uint32_t _hertz = 0; /**< Spi freq in Hertz , MAX 125 Mhz MIN 30Khz */
 	uint8_t _SPICEX_pin = 0;    /**< value = X , which SPI_CE pin to use */
-	
+	bool _resetPinOn = true; /**< reset pin? true:hw rst pin, false:sw rt*/
 
 }; //end of ST7789_TFT  class
 
