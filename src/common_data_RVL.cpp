@@ -11,5 +11,5 @@
 */
 uint16_t GetRVLibVersionNum(void)
 {
-	return 110;
+	return 120;
 }

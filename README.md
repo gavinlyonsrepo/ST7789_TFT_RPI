@@ -36,7 +36,7 @@
 3. Graphics + print class included
 4. Dependency: [bcm2835 Library](http://www.airspayce.com/mikem/bcm2835/), Provides SPI , system timer and GPIO control.
 5. Hardware (SPI0 and SPI1-aux) & Software SPI
-6. Inverse colour, rotate, sleep modes supported.
+6. Inverse colour, rotate, sleep modes and vertical scroll supported.
 7. 24 bit colour , 16 bit color & bi-color Bitmaps supported.
 
 ## See Also
@@ -239,7 +239,7 @@ The user must call function **TFTSPIHWSettings()** before each block of SPI tran
 ### Raspberry Pi five
 
 Will not work on Raspberry 5 at present as the bcm2835 Library dependency is not updated
-to work yet on Rpi5.
+to work yet on Rpi5. See "See Also" of this readme for alternate library. 
 
 ### Display offsets
 

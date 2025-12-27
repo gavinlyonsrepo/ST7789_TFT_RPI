@@ -7,6 +7,7 @@
 	-# Test 500 RGB color OK?
 	-# Test 502 Rotate
 	-# Test 503 change modes test -> Invert, display on/off and Sleep.
+	-# Test 504 scroll
 	-# Test 705 print method all fonts
 	-# Test 706 Misc print class tests (string object, println invert, wrap, base nums etc)
 	-# Test 902 rectangles
@@ -39,6 +40,7 @@ void DisplayReset(void);
 void Test500(void); // Color RGB
 void Test502(void); // Rotate
 void Test503(void); // change modes test -> Invert, display on/off and Sleep.
+void Test504(void);
 
 void Test701(void);
 void Test704(void);
@@ -58,6 +60,7 @@ int main(void)
 	Test500();
 	Test502();
 	Test503();
+	Test504();
 	Test705();
 	Test706();
 	Test902();
@@ -200,6 +203,35 @@ void Test503()
 	myTFT.TFTsleepDisplay(false);
 	std::cout << "Test 503-6: Sleep off" << std::endl;
 	delayMilliSecRVL(TEST_DELAY2);
+}
+
+void Test504(void)
+{
+	DisplayReset();
+	std::cout <<  "Test 504: Scroll\r\n" << std::endl;
+	myTFT.setFont(font_default);
+	const uint8_t LINES = 10, LINE_SIZE = 10, LINE_OFFSET = 3, TOP_FIXED = 0, BOTTOM_FIXED = 0;
+	char teststr1[] = "Scroll test";
+	
+	for (uint8_t i = 0; i < LINES; i++)
+	{
+	myTFT.writeCharString(5, LINE_OFFSET+i*LINE_SIZE,teststr1);
+	}
+	myTFT.TFTsetScrollDefinition(TOP_FIXED,BOTTOM_FIXED,1);  // bottom-to-top
+	uint8_t pos = LINE_OFFSET;
+	for (uint8_t i = 0; i < LINES; i++) 
+	{
+		for (uint8_t j = 0; j < LINE_SIZE; j++) 
+		{
+			myTFT.TFTVerticalScroll(pos + TOP_FIXED);
+			pos++;
+			// check pos if necessary: must be < tftTFT_HEIGHT - TOP_FIXED - BOTTOM_FIXED 
+		}
+	delayMilliSecRVL(1000);
+	}
+	myTFT.TFTNormalMode();
+	myTFT.fillScreen(myTFT.RVLC_BLACK);
+	DisplayReset();
 }
 
 void Test705(void)
