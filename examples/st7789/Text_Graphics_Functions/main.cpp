@@ -207,15 +207,16 @@ void Test503()
 
 void Test504(void)
 {
+	myTFT.TFTsetRotation(myTFT.TFT_Degrees_0);
 	DisplayReset();
-	std::cout <<  "Test 504: Scroll\r\n" << std::endl;
+	std::cout <<  "Test 504: Scroll" << std::endl;
 	myTFT.setFont(font_default);
 	const uint8_t LINES = 10, LINE_SIZE = 10, LINE_OFFSET = 3, TOP_FIXED = 0, BOTTOM_FIXED = 0;
 	char teststr1[] = "Scroll test";
 	
 	for (uint8_t i = 0; i < LINES; i++)
 	{
-	myTFT.writeCharString(5, LINE_OFFSET+i*LINE_SIZE,teststr1);
+		myTFT.writeCharString(5, LINE_OFFSET+i*LINE_SIZE,teststr1);
 	}
 	myTFT.TFTsetScrollDefinition(TOP_FIXED,BOTTOM_FIXED,1);  // bottom-to-top
 	uint8_t pos = LINE_OFFSET;
@@ -227,11 +228,11 @@ void Test504(void)
 			pos++;
 			// check pos if necessary: must be < tftTFT_HEIGHT - TOP_FIXED - BOTTOM_FIXED 
 		}
-	delayMilliSecRVL(1000);
+		delayMilliSecRVL(1000);
 	}
 	myTFT.TFTNormalMode();
-	myTFT.fillScreen(myTFT.RVLC_BLACK);
-	DisplayReset();
+	myTFT.fillScreen(RVLC_BLACK);
+	myTFT.TFTsetRotation(myTFT.TFT_Degrees_90);
 }
 
 void Test705(void)

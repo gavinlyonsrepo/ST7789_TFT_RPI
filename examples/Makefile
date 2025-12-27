@@ -1,4 +1,4 @@
-# Gavin Lyons 11-2024
+## Gavin Lyons 11-2024
 # Makefile to build example program for
 # ST7789_TFT_RPI : 16 bit color Graphic displays
 # Display 1 = ST7789   TFT LCD SPI

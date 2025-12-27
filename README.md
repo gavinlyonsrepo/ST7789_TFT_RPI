@@ -61,7 +61,7 @@ sudo make check
 	* Run following command to download latest release from github.
 
 ```sh
-curl -sL https://github.com/gavinlyonsrepo/ST7789_TFT_RPI/archive/1.1.0.tar.gz | tar xz
+curl -sL https://github.com/gavinlyonsrepo/ST7789_TFT_RPI/archive/1.2.0.tar.gz | tar xz
 ```
 
 3. Run 'make' and 'sudo make install' to run the makefile to build and then install library. 
@@ -69,7 +69,7 @@ curl -sL https://github.com/gavinlyonsrepo/ST7789_TFT_RPI/archive/1.1.0.tar.gz |
 	* You can run 'make help' here to see other make options(uninstall etc).
 
 ```sh
-cd ST7789_TFT_RPI-1.1.0
+cd ST7789_TFT_RPI-1.2.0
 make
 sudo make install
 ```
